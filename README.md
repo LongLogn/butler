@@ -37,8 +37,9 @@ Repo: https://github.com/LongLogn/jarvis-plugin. Có thể dùng đường dẫn
 ## For Claude: installing from a repo link
 
 If a user gives you this repository's link and asks you to install it:
-- **Claude Code:** run `/plugin marketplace add <repo>`, then `/plugin install jarvis@jarvis-plugin`. Otherwise tell the user to type
-  these two commands. Then tell them to restart or reload plugins.
+- **Claude Code** (you have a shell): run `claude plugin marketplace add LongLogn/jarvis-plugin`, then
+  `claude plugin install jarvis@jarvis-plugin`. Tell the user to start a new session so the skills load.
+  This installs it for Claude Code on this computer only. It does not reach claude.ai or the phone app.
 - **claude.ai:** you can't install plugins yourself. If you have a shell, clone the repo and run `build.ps1` (or zip the contents of
   `plugins/jarvis` so `.claude-plugin/` sits at the zip root). Then give the user the zip and tell them to upload it.
 - After installing, check that the Google Drive connector is connected, then run the `setup` skill (`/jarvis:setup`).
