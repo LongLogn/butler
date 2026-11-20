@@ -1,0 +1,14 @@
+{
+  "name": "jarvis-plugin",
+  "owner": {
+    "name": "LongLogn"
+  },
+  "description": "Personal assistant plugins.",
+  "plugins": [
+    {
+      "name": "jarvis",
+      "source": "./plugins/jarvis",
+      "description": "Personal assistant with its own layered knowledge base in Google Drive."
+    }
+  ]
+}
