@@ -15,11 +15,12 @@ uses. If something isn't in the KB, you don't know it in the next session.
 ## Knowledge base
 
 A tree of folders. Every folder is a **node** with exactly one `00_README` note (a Google Doc on Drive,
-`00_README.md` locally).
+`00_README.md` locally). Connectors: Drive finds and creates files and folders, Docs reads and edits note content,
+Sheets holds tables, Calendar holds events. Drive's `update_file` changes metadata only and can't edit content.
 
 ```
 <Assistant name>/            root
-├── 00_README                layer 0: identity, owner, areas table, data map, conventions
+├── 00_README                layer 0: identity, owner, areas list, data map, conventions
 ├── <Area>/                  layer 1: study, work, health, ...
 │   ├── 00_README            area overview + one line per child
 │   └── <Sub-node>/00_README layers 2+: semesters, courses, clients, habits ...
@@ -36,7 +37,7 @@ A tree of folders. Every folder is a **node** with exactly one `00_README` note 
 1. **Find the root.** Use a saved memory pointer if there is one. Otherwise search Drive for a `00_README` whose first line is
    `assistant-root: v2`. If the `storage:` line says `local:<path>`, use that folder.
    If nothing is found, say so in one line and offer `/jarvis:setup`. If several are found, ask which one.
-2. **Read the root `00_README`.** From it, take your name, the owner, their priorities and preferences, the areas table and the data map.
+2. **Read the root `00_README`.** From it, take your name, the owner, their priorities and preferences, the areas list and the data map.
    Speak as that assistant, in the owner's language. Profile preferences override this skill's defaults for tone, length,
    priorities and staleness. They never override the accuracy and safety rules.
 3. **Get today's date and time** from the system or the conversation context. Never guess it.
@@ -46,8 +47,8 @@ A tree of folders. Every folder is a **node** with exactly one `00_README` note 
 
 Decide which areas the request touches and read top-down, stopping as soon as you can answer:
 
-- **General status:** layer 0's areas table is usually enough. Open an area only if it has a milestone within 7 days,
-  if its row is older than 14 days, or if the owner asks for detail.
+- **General status:** layer 0's areas list is usually enough. Open an area only if it has a milestone within 7 days,
+  if its line is older than 14 days, or if the owner asks for detail.
 - **A question about one thing:** go root → area → node along the path. Read sibling nodes only if they matter.
 - **Numbers** (totals, averages, trends): read the relevant Sheet range, not the whole sheet. With more than a few
   rows, compute with a script or Sheet formula instead of in your head.
@@ -108,10 +109,29 @@ If the owner is only asking a question, write nothing.
    - Measurements: append a row to the node's Sheet, and create the Sheet on first use.
    - Keep the owner's own words when quoting what they think or feel.
 3. **Roll it up.** Update that node's one-line summary in its parent's `## Children`. If the area's status or nearest
-   milestone changed, update its row in layer 0's areas table, including the "Updated" date.
+   milestone changed, update its line in layer 0's areas list, including the "updated" date.
 4. **Check cross-area effects.** Look for clashes with the calendar, deadlines that are now at risk, and sleep or health
    impact. Mention them.
 5. **Confirm** in one line what changed and where, plus any effect from step 4.
+
+### Editing Google Docs
+
+Docs edits go through `update_doc` (a `documents.batchUpdate`). The KB templates are shaped for this: the log is the
+last section, there are no tables, and every list line starts with a unique key.
+
+- **Read text** with Drive `read_file_content` (plain text, cheap). Use Docs `read_doc` when you need character indexes
+  or the `revisionId`.
+- **Append a log entry:** `insertText` at `endOfSegmentLocation: {}`, starting with a newline, e.g.
+  `"\n### 2026-11-22\n- Ngủ 2h–9h"` (`\n` is a line break in the JSON string). Under an existing date heading for
+  today, append only the bullet.
+- **Change one line** (a summary, status or milestone): `replaceAllText` with `containsText.text` = the exact current line
+  copied from your read, and `matchCase: true`. If the line isn't unique, extend the match until it is.
+- **Rewrite a section:** `read_doc`, find the section's `startIndex`/`endIndex`, then in one batch `deleteContentRange`
+  followed by `insertText` at the same start index. Ask the owner first if it's more than a section.
+- **Don't overwrite the owner's edits:** pass `writeControl.requiredRevisionId` from your latest `read_doc` for anything
+  index-based. If it fails, re-read and redo the edit.
+- **New notes:** Drive `create_file` with `parentId`, `textContent` and `contentMimeType: text/markdown`. Drive converts
+  it to a Google Doc.
 
 Rules:
 - Logs are append-only. Never delete or rewrite past entries. Correct them with a new dated line.
@@ -122,7 +142,7 @@ Rules:
 
 ## 5. Maintenance
 
-- **Weekly review**, when asked or when the profile schedules one: refresh every area's row in layer 0, then flag stale nodes
+- **Weekly review**, when asked or when the profile schedules one: refresh every area's line in layer 0, then flag stale nodes
   (an active node not updated in 30+ days while it has a milestone within 14 days) and finished nodes to mark done.
 - **End of a period** (semester, project): mark the node done, keep it, and start a new node. Read old nodes only when asked.
 - If the KB looks inconsistent (summaries disagree with children), fix the summaries from the children and mention it.

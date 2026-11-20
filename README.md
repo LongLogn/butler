@@ -10,7 +10,11 @@ Tên trợ lý, các mảng và giọng điệu do bạn chọn lúc khởi tạ
 ## Bắt đầu
 
 1. **Cài plugin** theo một trong hai cách bên dưới.
-2. **Kết nối connector** trên claude.ai: Google Drive (bắt buộc), Google Sheets và Google Calendar (nên có).
+2. **Kết nối connector** trên claude.ai:
+   - **Google Drive** (bắt buộc): tìm kho, tạo thư mục và file.
+   - **Google Docs** (bắt buộc): đọc và **sửa** nội dung ghi chú. Drive chỉ đổi được tên và thư mục của file, không sửa được nội dung.
+   - **Google Sheets** (nên có): bảng dữ liệu như buổi dạy, giấc ngủ.
+   - **Google Calendar** (nên có): lịch.
 3. **Khởi tạo:** gõ `/jarvis:setup`. Trợ lý sẽ hỏi tên của nó, cách xưng hô và các mảng bạn muốn quản lý, rồi tạo kho.
 4. **Dùng hằng ngày:** gõ `/jarvis:jarvis` hoặc nói chuyện tự nhiên, ví dụ "tuần này thế nào?" hay "hôm qua ngủ 1h–8h".
 
@@ -42,7 +46,8 @@ If a user gives you this repository's link and asks you to install it:
   This installs it for Claude Code on this computer only. It does not reach claude.ai or the phone app.
 - **claude.ai:** you can't install plugins yourself. If you have a shell, clone the repo and run `build.ps1` (or zip the contents of
   `plugins/jarvis` so `.claude-plugin/` sits at the zip root). Then give the user the zip and tell them to upload it.
-- After installing, check that the Google Drive connector is connected, then run the `setup` skill (`/jarvis:setup`).
+- After installing, check that the Google Drive and Google Docs connectors are connected (Sheets and Calendar are
+  recommended), then run the `setup` skill (`/jarvis:setup`).
 
 ## Cấu trúc repo
 

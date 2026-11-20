@@ -19,7 +19,7 @@ sắp xếp và tra cứu trong **kho tri thức riêng của nó** (mặc đị
 | skill `setup` | `/jarvis:setup` | Hỏi tên trợ lý, các mảng, sở thích → tạo kho |
 | skill `jarvis` | `/jarvis:jarvis` hoặc hỏi tự nhiên | Đọc kho, trả lời, lập kế hoạch, ghi chép |
 
-Plugin **không** đóng gói MCP. Google Drive, Sheets, Calendar là connector cấp tài khoản
+Plugin **không** đóng gói MCP. Google Drive, Docs, Sheets, Calendar là connector cấp tài khoản
 claude.ai (MCP từ xa của Google, OAuth một lần, dùng được trên mọi thiết bị). Skill chỉ hướng
 dẫn cách dùng các tool đó. Khi cần một MCP tự viết (vd: tính GPA theo quy chế riêng), mới thêm
 `.mcp.json` vào plugin.
@@ -43,6 +43,12 @@ dẫn cách dùng các tool đó. Khi cần một MCP tự viết (vd: tính GPA
 ```
 
 - Mỗi thư mục là một **nút**. Mỗi nút có đúng một `00_README` (Google Doc).
+- Phân vai connector: **Drive** tìm kho, tạo thư mục và file. **Docs** đọc và sửa nội dung ghi chú.
+  `update_file` của Drive chỉ đổi tên, thư mục, gắn sao, không sửa được nội dung.
+- Mẫu ghi chú được thiết kế để sửa bằng Docs an toàn:
+  - Phần nhật ký luôn nằm **cuối file**, nên ghi thêm chỉ cần chèn vào cuối.
+  - **Không dùng bảng.** Mỗi mục là một dòng, các trường cách nhau bằng ` · `.
+  - Mỗi dòng bắt đầu bằng một khóa không trùng, nên `replaceAllText` thay đúng một dòng.
 - Dữ liệu lặp lại có số đo (buổi dạy, giấc ngủ, chi tiêu) → Google Sheet trong nút đó.
 - Sự kiện có giờ → Google Calendar (lịch riêng mang tên trợ lý).
 

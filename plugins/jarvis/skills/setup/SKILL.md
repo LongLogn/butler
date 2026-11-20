@@ -15,13 +15,19 @@ never a long form.
 
 ## 1. Check what this session can do
 
-- **Google Drive connector** (default storage). Look for Drive tools such as `search_files` and `create_file`.
-- **Google Sheets** and **Google Calendar** connectors: optional, used for tables and schedules.
-- **Local files** (Claude Code): fallback storage.
+| Connector | Needed for | Required? |
+| --- | --- | --- |
+| Google Drive | finding the KB, creating folders and docs (`search_files`, `create_file`) | yes |
+| Google Docs | reading and **editing** note content (`read_doc`, `update_doc`) | yes |
+| Google Sheets | tables of measurements | recommended |
+| Google Calendar | timed events | recommended |
 
-If Drive is missing, tell the owner in one line how to connect it (Settings → Connectors on claude.ai,
+Drive alone is not enough. Its `update_file` changes only metadata (title, folder, star), never content,
+so without Docs the assistant can create notes but never update them.
+
+If Drive or Docs is missing, tell the owner in one line how to connect it (Settings → Connectors on claude.ai,
 or the connector card in Claude Code) and offer the local-folder fallback if this session has file access.
-Don't continue until one storage option works.
+Don't continue until one storage option can both create and edit notes.
 
 ## 2. Look for an existing KB
 
@@ -63,16 +69,20 @@ plus any Sheets and the calendar. Create it only after the owner says yes.
 
 ## 5. Create the KB
 
-1. Create the root folder named after the assistant, in the Drive root unless the owner picks a place.
-2. Create `00_README` in the root from the **layer-0 template** below.
-3. For each area, create a folder and its `00_README` from the **node template** below.
+1. Create the root folder named after the assistant, in the Drive root unless the owner picks a place
+   (Drive `create_file`, `contentMimeType: application/vnd.google-apps.folder`).
+2. Create `00_README` in the root from the **layer-0 template** below. Use Drive `create_file` with `parentId` = the folder,
+   `textContent` = the filled template and `contentMimeType: text/markdown`. Drive converts it to a Google Doc.
+   Read it back with Docs `read_doc`. If the headings came through as literal `#` text, recreate it with `text/plain`
+   and apply heading styles with `update_doc` (`updateParagraphStyle`, `namedStyleType: HEADING_1/2`).
+3. For each area, create a folder and its `00_README` the same way, from the **node template** below.
 4. Import notes if the owner asked. Read each source note and put its content into the matching node, in the
    owner's original wording. Split deeper topics (e.g. one course) into child nodes. Fill the one-line summaries upward.
    Leave the source files untouched.
 5. Calendar, if connected: use a calendar named after the assistant. If the connector can't create calendars,
    use the primary calendar and prefix event titles with `[<Name>]`. Create no events during setup unless the owner asks.
-6. **Verify:** read the root `00_README` back. Also check that you can edit it, by appending the setup line to its system log.
-   If editing doesn't work with the tools available, say so plainly: the assistant can't record updates until that is fixed.
+6. **Verify:** read the root `00_README` back with `read_doc`. Then append the setup line to its system log with `update_doc`
+   (`insertText` at `endOfSegmentLocation`). If editing fails, say so plainly: the assistant can't record updates until it works.
 7. Save a memory pointer if this client has memory (e.g. "Assistant KB: Google Drive folder <Name>, root doc 00_README, link …").
 
 ## 6. Hand over
@@ -80,6 +90,13 @@ plus any Sheets and the calendar. Create it only after the owner says yes.
 In 3–5 lines: the assistant's name, the link to the KB, the areas created, and how to use it from now on.
 For example: "From any device, call `/jarvis:jarvis` or just talk to me. Tell me things and I'll record them."
 Then switch into the assistant persona.
+
+## Template rules (they make Docs editing safe)
+
+- **The log is always the last section.** New entries are then a single `insertText` at `endOfSegmentLocation`.
+- **No tables in Docs.** Use one line per item with ` · ` separators. A line can then be updated with `replaceAllText`
+  on its exact old text. Docs tables need index arithmetic and break easily.
+- **Every list line starts with a unique key** (`- Học tập ·`, `- Cloud ·`), so `replaceAllText` matches exactly one line.
 
 ## Layer-0 template (root `00_README`)
 
@@ -103,9 +120,7 @@ storage: google-drive            (or: local:<absolute path>)
 - Fixed routine and constraints: <...>
 
 ## Areas (layer 1)
-| Area | Status | One-line summary | Nearest milestone | Updated |
-| --- | --- | --- | --- | --- |
-| <Area> | active | <...> | <YYYY-MM-DD what> | <YYYY-MM-DD> |
+- <Area> · active · <one-line summary> · next: <YYYY-MM-DD what> · updated <YYYY-MM-DD>
 
 ## Data map
 - Calendar: <calendar name or "not connected">
@@ -114,7 +129,7 @@ storage: google-drive            (or: local:<absolute path>)
 
 ## Conventions
 - Dates are written YYYY-MM-DD (shown to the owner in their local style).
-- Logs are append-only. Corrections are new dated lines.
+- Logs are append-only and always the last section. Corrections are new dated lines.
 - Each folder has one 00_README. Each parent keeps a one-line summary of each child.
 
 ## System log
@@ -123,18 +138,18 @@ storage: google-drive            (or: local:<absolute path>)
 
 ## Node template (`00_README` of any area or sub-node)
 
-Keep only sections that make sense for the node.
+Keep only sections that make sense for the node, but keep `## Log` last.
 
 ```
 # <Node name>
 Path: <Area / ... / Node>
-Status: <active | paused | done>    Importance: <high | medium | low>
+Status: <active | paused | done> · Importance: <high | medium | low>
 
 ## Summary
 <2–3 lines. The parent's one-line summary is distilled from this.>
 
 ## Children
-- <Child>: <one line> · next: <YYYY-MM-DD what> · updated <YYYY-MM-DD>
+- <Child> · <one line> · next: <YYYY-MM-DD what> · updated <YYYY-MM-DD>
 
 ## Key info
 - <rules, grading, people, places, links to the owner's files>
@@ -142,13 +157,13 @@ Status: <active | paused | done>    Importance: <high | medium | low>
 ## Milestones
 - <YYYY-MM-DD>: <what> (<weight or stakes>)
 
-## Log
-### <YYYY-MM-DD>
-- <what happened, what the owner said or thinks>
-
 ## Next
 - [ ] <...>
 
 ## Data
 - <Sheet name>: <what it holds>
+
+## Log
+### <YYYY-MM-DD>
+- <what happened, what the owner said or thinks>
 ```
