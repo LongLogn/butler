@@ -28,11 +28,11 @@ Sau khi tải lên, plugin có trên mọi thiết bị đăng nhập cùng tài
 ### Claude Code: cài thẳng từ repo
 
 ```
-/plugin marketplace add <github-user>/jarvis-plugin
+/plugin marketplace add LongLogn/jarvis-plugin
 /plugin install jarvis@jarvis-plugin
 ```
 
-Có thể dùng đường dẫn local thay cho `<github-user>/jarvis-plugin`.
+Repo: https://github.com/LongLogn/jarvis-plugin. Có thể dùng đường dẫn local thay cho `LongLogn/jarvis-plugin`.
 
 ## For Claude: installing from a repo link
 
