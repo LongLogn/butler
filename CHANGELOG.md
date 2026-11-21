@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.3.0 — 2026-11-21
+Bản sửa sau khi hai agent đánh giá: một agent xem độ bền, một agent xem độ đơn giản.
+- **Phiên bản kho:** đầu `00_README` gốc có `butler-root: v1` và `written-by: butler X.Y.Z`. `/butler:start` so sánh hai số này:
+  kho cũ thì hỏi rồi nâng cấp (có sao lưu vào `_backup/`), kho mới hơn plugin thì chỉ đọc.
+  Các bước nâng cấp nằm trong mục "KB upgrades" của skill. `build.ps1` dừng lại nếu số phiên bản trong skill lệch với `plugin.json`.
+- **Tìm kho chắc hơn:** tìm theo nội dung `butler-root:`, bỏ qua bản sao lưu, phát hiện thư mục bị đổi tên,
+  và tiếp tục được bước setup từng thất bại giữa chừng.
+- **Sửa Docs đúng hơn:**
+  - các dòng đầu file cách nhau dòng trống, để không bị gộp khi chuyển từ markdown;
+  - nhật ký là dòng thường `YYYY-MM-DD · nội dung`, vì dòng thêm vào kế thừa kiểu chữ của dòng trước;
+  - `replaceAllText` lấy chữ từ `read_doc` và kiểm tra `occurrencesChanged`;
+  - khi viết lại một đoạn thì dùng `requiredRevisionId`.
+- **Tránh trùng lặp:** tìm trước khi tạo thư mục, ghi chú hay Sheet. Thêm quy tắc cho Sheets (tên tab, dòng tiêu đề) và Calendar
+  (tìm trước khi tạo, xem trước khi sửa hoặc xóa, nêu múi giờ, hỏi với sự kiện lặp lại).
+- **Gọn hơn:**
+  - bỏ bản lưu ở máy và dòng `storage:`;
+  - bỏ công thức tính điểm ưu tiên;
+  - bỏ mục Conventions và dòng `Path:` trong mẫu;
+  - chỉ cập nhật lớp trên khi trạng thái hoặc mốc đổi;
+  - gõ `/butler:start` không kèm câu hỏi thì nhận một bản tóm tắt 3 dòng;
+  - câu hỏi setup giảm từ 8 xuống 7.
+
 ## 3.2.0 — 2026-11-21
 - Đổi tên skill chính từ `butler` thành `start`: lệnh dùng hằng ngày giờ là **`/butler:start`** (trước là `/butler:butler`).
 

@@ -46,11 +46,13 @@ Butler/                          ← gốc kho, luôn tên "Butler" dù trợ l�
 - Phân vai connector: **Drive** tìm kho, tạo thư mục và file. **Docs** đọc và sửa nội dung ghi chú.
   `update_file` của Drive chỉ đổi tên, thư mục, gắn sao, không sửa được nội dung.
 - Mẫu ghi chú được thiết kế để sửa bằng Docs an toàn:
-  - Phần nhật ký luôn nằm **cuối file**, nên ghi thêm chỉ cần chèn vào cuối.
+  - Phần nhật ký luôn nằm **cuối file**, mỗi mục một dòng `YYYY-MM-DD · nội dung`, nên ghi thêm chỉ cần chèn vào cuối.
+  - Các dòng đầu file cách nhau một dòng trống, để khi chuyển từ markdown chúng không bị gộp thành một đoạn.
   - **Không dùng bảng.** Mỗi mục là một dòng, các trường cách nhau bằng ` · `.
   - Mỗi dòng bắt đầu bằng một khóa không trùng, nên `replaceAllText` thay đúng một dòng.
 - Dữ liệu lặp lại có số đo (buổi dạy, giấc ngủ, chi tiêu) → Google Sheet trong nút đó.
-- Sự kiện có giờ → Google Calendar (lịch riêng mang tên trợ lý).
+- Sự kiện có giờ → Google Calendar. Dùng lịch mang tên trợ lý nếu chủ đã tạo sẵn, không thì dùng lịch chính
+  và thêm tiền tố `[Tên trợ lý]` vào tên sự kiện. Connector không tạo được lịch mới.
 
 ### Đọc: từ trên xuống, chỉ khi cần
 
@@ -65,17 +67,25 @@ trả lời được mà không cần đào sâu.
 ### Ghi: ghi ở dưới cùng, tóm tắt ngược lên trên
 
 1. Ghi vào nút sâu nhất phù hợp (nhật ký có ngày, cập nhật trạng thái).
-2. Cập nhật dòng tóm tắt của nút đó ở README cha; nếu mốc/trạng thái của cả mảng đổi
-   thì cập nhật bảng ở lớp 0.
+2. Chỉ khi trạng thái, tóm tắt hoặc mốc tiếp theo đổi: cập nhật dòng của nút đó ở README cha, rồi lần lượt
+   các lớp trên tới lớp 0. Dừng ngay ở lớp đầu tiên mà dòng không đổi.
 3. Không xóa nhật ký cũ. Sửa sai bằng một dòng đính chính có ngày.
 4. Hỏi chủ trước khi: thêm/sửa/xóa sự kiện lịch, xóa hoặc di chuyển nút, viết lại lớn.
 5. Không lưu mật khẩu, số thẻ, giấy tờ tùy thân.
 
-## Lưu trữ thay thế
+## Phiên bản kho và nâng cấp
 
-Không có connector Google Drive nhưng có quyền đọc ghi file (Claude Code) → kho có thể là
-một thư mục local với cấu trúc giống hệt, `00_README.md` thay cho Google Doc,
-`.csv` thay cho Sheet. Lớp 0 ghi rõ `storage:` để phiên sau biết kho ở đâu.
+Kho chỉ nằm trên Drive. Bản lưu ở máy đã bị bỏ, vì điện thoại và claude.ai không truy cập được ổ đĩa.
+
+- Hai dòng đầu của `00_README` gốc: `butler-root: v1` là định dạng kho, `written-by: butler X.Y.Z` là bản plugin ghi lần cuối.
+- Mỗi phiên, `/butler:start` so sánh định dạng kho với định dạng mà skill hiểu:
+  - **Bằng nhau:** làm việc bình thường.
+  - **Kho cũ hơn:** nói bản mới thay đổi gì, hỏi chủ rồi mới nâng cấp. Trước khi nâng cấp, sao lưu các file sẽ bị sửa
+    vào `Butler/_backup/`, đổi tên bản sao để phiên sau không nhận nhầm là gốc kho.
+  - **Kho mới hơn:** chỉ đọc, nhắc chủ cập nhật plugin.
+- Các bước nâng cấp nằm ngay trong skill `start`, mục "KB upgrades". Trên claude.ai, skill chỉ đọc được chính nó, không đọc được file khác trong repo.
+- Thêm bước nâng cấp chỉ khi đổi cấu trúc kho. Đổi cách trả lời thì không cần nâng định dạng.
+- `build.ps1` dừng lại nếu số phiên bản `butler X.Y.Z` trong skill khác với `plugin.json`.
 
 ## Phát hành
 

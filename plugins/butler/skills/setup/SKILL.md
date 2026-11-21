@@ -1,20 +1,20 @@
 ---
 name: setup
-description: First-run onboarding for the personal assistant. Asks the owner what to name their assistant and which life areas to manage (study, work, health...), then creates the assistant's own knowledge base, by default a "Butler" folder in Google Drive. Use when the user invokes /butler:setup, wants to set up, reset or extend their assistant, or when the start skill finds no knowledge base.
+description: First-run onboarding for the personal assistant. Asks the owner what to name their assistant and which life areas to manage (study, work, health...), then creates the assistant's own knowledge base, a "Butler" folder in Google Drive. Use when the user invokes /butler:setup, wants to set up, reset or extend their assistant, or when the start skill finds no knowledge base.
 ---
 
 # Assistant setup
 
 You are setting up a personal assistant for the user (the **owner**). The assistant keeps its own
-**knowledge base (KB)**: a tree of folders, one per area of the owner's life, each with a
-`00_README` note. The `start` skill in this plugin reads and maintains it; this skill creates it.
+**knowledge base (KB)**: a tree of folders in Google Drive, one per area of the owner's life, each with a
+`00_README` Google Doc. The `start` skill in this plugin reads and maintains it; this skill creates it.
 The KB's root folder is always named `Butler`, whatever name the owner gives the assistant.
-Write everything in the KB in the owner's language. Translate the template headings below.
+This skill creates **KB format v1** (plugin butler 3.3.0).
 
-Talk to the owner in their language. Keep each message short. Ask a few questions at a time,
-never a long form.
+Write everything in the KB in the owner's language, and translate the template headings below.
+Talk to the owner in their language. Keep each message short. Ask a few questions at a time, never a long form.
 
-## 1. Check what this session can do
+## 1. Check the connectors
 
 | Connector | Needed for | Required? |
 | --- | --- | --- |
@@ -23,19 +23,17 @@ never a long form.
 | Google Sheets | tables of measurements | recommended |
 | Google Calendar | timed events | recommended |
 
-Drive alone is not enough. Its `update_file` changes only metadata (title, folder, star), never content,
-so without Docs the assistant can create notes but never update them.
-
+Drive alone is not enough. Its `update_file` changes only metadata (title, folder, star), never content.
 If Drive or Docs is missing, tell the owner in one line how to connect it (Settings → Connectors on claude.ai,
-or the connector card in Claude Code) and offer the local-folder fallback if this session has file access.
-Don't continue until one storage option can both create and edit notes.
+or the connector card in Claude Code). Don't continue until both work.
 
 ## 2. Look for an existing KB
 
-Search Drive for a folder named `Butler` containing a `00_README` whose first line is `butler-root: v1`
-(or, for local storage, the folder the owner names).
+`search_files` for a doc named `00_README` whose full text contains `butler-root:` and that isn't trashed.
+Ignore hits inside a `_backup` folder.
 - **Found:** show its assistant name and areas. Ask whether to keep it and add areas, or create a new one.
   Never delete or overwrite an existing KB without an explicit yes.
+- **A `Butler` folder with no root doc** (an earlier setup failed): offer to continue inside it instead of creating a second one.
 - **Not found:** continue.
 
 ## 3. Interview the owner
@@ -44,13 +42,12 @@ Round 1 (required):
 1. What should your assistant be called? (default: Butler)
 2. How should it address you?
 3. Which areas do you want it to manage? (examples: study, work, health, finances, personal projects)
-4. Language and tone? (default: the language of this chat, short and direct)
+4. Language and style? (default: this chat's language, short and direct)
 
 Round 2 (optional, offer "skip, fill in later"):
-5. For each area: one line on what it is and how important it is (high / medium / low).
-6. When areas conflict, what wins? (e.g. health > study > work)
-7. Fixed routine: classes, work hours, preferred sleep time.
-8. Existing notes to import? (e.g. a local folder of notes, a spreadsheet the assistant may read)
+5. Rank your areas by importance. Which wins when they conflict?
+6. Fixed routine: classes, work hours, preferred sleep time.
+7. Do you have notes elsewhere I should copy in? (Drive docs, a sheet, a folder of notes)
 
 Don't invent answers. Leave unknown fields as `(chưa điền)` / `(not set)` in the owner's language.
 
@@ -66,25 +63,24 @@ Butler/
 └── Sức khỏe/00_README
 ```
 
-plus any Sheets and the calendar. Create it only after the owner says yes.
+plus any Sheets. Create it only after the owner says yes.
 
 ## 5. Create the KB
 
-1. Create the root folder named `Butler`, in the Drive root unless the owner picks a place
+1. Create the root folder `Butler`, in the Drive root unless the owner picks a place
    (Drive `create_file`, `contentMimeType: application/vnd.google-apps.folder`).
-2. Create `00_README` in the root from the **layer-0 template** below. Use Drive `create_file` with `parentId` = the folder,
+2. Create the root `00_README` from the **layer-0 template** below: Drive `create_file` with `parentId` = the folder,
    `textContent` = the filled template and `contentMimeType: text/markdown`. Drive converts it to a Google Doc.
-   Read it back with Docs `read_doc`. If the headings came through as literal `#` text, recreate it with `text/plain`
-   and apply heading styles with `update_doc` (`updateParagraphStyle`, `namedStyleType: HEADING_1/2`).
-3. For each area, create a folder and its `00_README` the same way, from the **node template** below.
-4. Import notes if the owner asked. Read each source note and put its content into the matching node, in the
-   owner's original wording. Split deeper topics (e.g. one course) into child nodes. Fill the one-line summaries upward.
+3. **Verify before going on.** Read it with `read_doc`. Check that its first paragraph is exactly `butler-root: v1`.
+   Then append the setup line to the system log with `update_doc` (`insertText` at `endOfSegmentLocation`).
+   If either fails, stop and tell the owner before creating anything else.
+4. For each area, create a folder and its `00_README` the same way, from the **node template** below.
+5. Import notes if the owner asked. Put each source note's content into the matching node, in the owner's original
+   wording. Split deeper topics (e.g. one course) into child nodes. Fill the one-line summaries upward.
    Leave the source files untouched.
-5. Calendar, if connected: use a calendar named after the assistant. If the connector can't create calendars,
-   use the primary calendar and prefix event titles with `[<Name>]`. Create no events during setup unless the owner asks.
-6. **Verify:** read the root `00_README` back with `read_doc`. Then append the setup line to its system log with `update_doc`
-   (`insertText` at `endOfSegmentLocation`). If editing fails, say so plainly: the assistant can't record updates until it works.
-7. Save a memory pointer if this client has memory (e.g. "Assistant KB: Google Drive folder Butler, root doc 00_README, link …").
+6. Calendar, if connected: if a calendar named after the assistant already exists, use it. Otherwise use the primary
+   calendar and start event titles with `[<Name>]`. Write the choice in the data map. Create no events during setup unless asked.
+7. If this client has memory, save `Butler KB root doc ID: <id>, link: <url>`.
 
 ## 6. Hand over
 
@@ -94,26 +90,28 @@ Then switch into the assistant persona.
 
 ## Template rules (they make Docs editing safe)
 
-- **The log is always the last section.** New entries are then a single `insertText` at `endOfSegmentLocation`.
-- **No tables in Docs.** Use one line per item with ` · ` separators. A line can then be updated with `replaceAllText`
-  on its exact old text. Docs tables need index arithmetic and break easily.
-- **Every list line starts with a unique key** (`- Học tập ·`, `- Cloud ·`), so `replaceAllText` matches exactly one line.
+- **Blank line between header lines.** In markdown, lines without a blank line between them merge into one paragraph,
+  and the version check could no longer read `butler-root: v1`.
+- **The log is always the last section,** one plain line per entry: `YYYY-MM-DD · <what>`.
+- **No tables in Docs.** Use one line per item with ` · ` separators, and start every list line with a unique key
+  (`- Học tập ·`, `- Cloud ·`), so `replaceAllText` matches exactly one line.
+- **New nodes start small:** Summary, Next and Log only. Add the other sections when they're first needed.
 
 ## Layer-0 template (root `00_README`)
 
-The first line must stay exactly `butler-root: v1`. It is how later sessions find the KB.
+The first paragraph must stay exactly `butler-root: v1`. It is how later sessions find the KB and check its format.
 
 ```
 butler-root: v1
-storage: google-drive            (or: local:<absolute path>)
+
+written-by: butler 3.3.0
 
 # <Name>: knowledge base
 
 ## Identity
 - Assistant name: <Name>
 - Owner: <how to address them>
-- Language and tone: <...>
-- Reply length: <default: short, about one phone screen>
+- Style: <language, tone, reply length>
 
 ## Owner
 - Priorities (what wins in a conflict): <...>
@@ -121,29 +119,24 @@ storage: google-drive            (or: local:<absolute path>)
 - Fixed routine and constraints: <...>
 
 ## Areas (layer 1)
-- <Area> · active · <one-line summary> · next: <YYYY-MM-DD what> · updated <YYYY-MM-DD>
+- <Area> · <one-line summary> · next: <YYYY-MM-DD what> · updated <YYYY-MM-DD>
 
 ## Data map
-- Calendar: <calendar name or "not connected">
+- Calendar: <calendar name, or primary with [<Name>] prefix, or not connected>
 - Sheets: <name, which node it lives in, what it holds>
 - Outside the KB (links only): <repos, owner's documents>
 
-## Conventions
-- Dates are written YYYY-MM-DD (shown to the owner in their local style).
-- Logs are append-only and always the last section. Corrections are new dated lines.
-- Each folder has one 00_README. Each parent keeps a one-line summary of each child.
-
 ## System log
-- <YYYY-MM-DD>: KB created by setup.
+<YYYY-MM-DD> · KB created by setup (format v1, butler 3.3.0)
 ```
 
 ## Node template (`00_README` of any area or sub-node)
 
-Keep only sections that make sense for the node, but keep `## Log` last.
+Sections in this order. Keep `## Log` last.
 
 ```
 # <Node name>
-Path: <Area / ... / Node>
+
 Status: <active | paused | done> · Importance: <high | medium | low>
 
 ## Summary
@@ -159,12 +152,11 @@ Status: <active | paused | done> · Importance: <high | medium | low>
 - <YYYY-MM-DD>: <what> (<weight or stakes>)
 
 ## Next
-- [ ] <...>
+- <...>
 
 ## Data
 - <Sheet name>: <what it holds>
 
 ## Log
-### <YYYY-MM-DD>
-- <what happened, what the owner said or thinks>
+<YYYY-MM-DD> · <what happened, what the owner said or thinks>
 ```
