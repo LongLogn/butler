@@ -38,6 +38,13 @@ Sau khi tải lên, plugin có trên mọi thiết bị đăng nhập cùng tài
 
 Repo: https://github.com/LongLogn/butler. Có thể dùng đường dẫn local thay cho `LongLogn/butler`.
 
+### Cập nhật lên bản mới
+
+- **claude.ai:** build lại zip, tải lên thay bản cũ.
+- **Claude Code:** `claude plugin marketplace update butler`, rồi `claude plugin update butler@butler`.
+
+Kho trên Drive giữ nguyên. Bản mới vẫn tìm được kho cũ. Nếu định dạng kho cần nâng cấp, trợ lý sẽ hỏi bạn trước và sao lưu vào `Butler/_backup/`.
+
 ## For Claude: installing from a repo link
 
 If a user gives you this repository's link and asks you to install it:
