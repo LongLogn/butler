@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.1 — 2026-11-21
+- Bỏ quy tắc thêm tiền tố `butler-` cho mọi file của bản 3.1.0. Ghi chú mỗi thư mục quay lại tên `00_README`, Sheet đặt tên theo chủ đề.
+- Bỏ chữ "jarvis" còn sót trong câu hỏi nhập ghi chú cũ ở bước setup.
+
 ## 3.0.0 — 2026-11-21
 - Đổi tên plugin từ `jarvis` thành **`butler`**. Lệnh mới là `/butler:setup` và `/butler:butler`. Repo đổi thành `LongLogn/butler`.
 - Thư mục gốc của kho trên Drive **luôn tên là `Butler`**, không theo tên trợ lý nữa. Lúc setup vẫn hỏi tên và phong cách.

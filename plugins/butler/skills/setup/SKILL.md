@@ -50,7 +50,7 @@ Round 2 (optional, offer "skip, fill in later"):
 5. For each area: one line on what it is and how important it is (high / medium / low).
 6. When areas conflict, what wins? (e.g. health > study > work)
 7. Fixed routine: classes, work hours, preferred sleep time.
-8. Existing notes to import? (e.g. a local folder of `jarvis.md` files, a spreadsheet the assistant may read)
+8. Existing notes to import? (e.g. a local folder of notes, a spreadsheet the assistant may read)
 
 Don't invent answers. Leave unknown fields as `(chưa điền)` / `(not set)` in the owner's language.
 
