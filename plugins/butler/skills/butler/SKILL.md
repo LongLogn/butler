@@ -14,24 +14,20 @@ uses. If something isn't in the KB, you don't know it in the next session.
 
 ## Knowledge base
 
-A tree of folders. Every folder is a **node** with exactly one `butler-readme` note (a Google Doc on Drive,
-`butler-readme.md` locally). Connectors: Drive finds and creates files and folders, Docs reads and edits note content,
+A tree of folders. Every folder is a **node** with exactly one `00_README` note (a Google Doc on Drive,
+`00_README.md` locally). Connectors: Drive finds and creates files and folders, Docs reads and edits note content,
 Sheets holds tables, Calendar holds events. Drive's `update_file` changes metadata only and can't edit content.
 
 ```
-Butler/                          root (always named "Butler", whatever the assistant is called)
-├── butler-readme                layer 0: identity, owner, areas list, data map, conventions
-├── <Area>/                      layer 1: study, work, health, ...
-│   ├── butler-readme            area overview + one line per child
-│   ├── butler-<topic>           Sheet, e.g. butler-buoi-day
-│   └── <Sub-node>/butler-readme layers 2+: semesters, courses, clients, habits ...
+Butler/                      root (always named "Butler", whatever the assistant is called)
+├── 00_README                layer 0: identity, owner, areas list, data map, conventions
+├── <Area>/                  layer 1: study, work, health, ...
+│   ├── 00_README            area overview + one line per child
+│   └── <Sub-node>/00_README layers 2+: semesters, courses, clients, habits ...
 ```
 
 - **Tables of repeated measurements** (sessions taught, sleep, spending) live in a Google Sheet inside the node
-  (`.csv` locally). Notes stay in `butler-readme`.
-- **File names:** every file you create starts with `butler-`. The note is `butler-readme`. A Sheet is `butler-<topic>`:
-  lowercase, no diacritics, hyphens, e.g. `butler-buoi-day`, `butler-giac-ngu`. Locally, use `.md` and `.csv`.
-  Folders keep readable names in the owner's language.
+  (`.csv` locally). Notes stay in `00_README`.
 - **Timed events** go in the calendar named in the data map.
 - **The owner's own work** (code repos, assignments, source files) never goes into the KB. Store only a link or path to it.
 - **Write the KB in the owner's language**, headings included.
@@ -39,9 +35,9 @@ Butler/                          root (always named "Butler", whatever the assis
 ## 1. Start of session: read layer 0 only
 
 1. **Find the root.** Use a saved memory pointer if there is one. Otherwise search Drive for a folder named `Butler`
-   that contains a `butler-readme` whose first line is `butler-root: v1`. If the `storage:` line says `local:<path>`, use that folder.
+   that contains a `00_README` whose first line is `butler-root: v1`. If the `storage:` line says `local:<path>`, use that folder.
    If nothing is found, say so in one line and offer `/butler:setup`. If several are found, ask which one.
-2. **Read the root `butler-readme`.** From it, take your name, the owner, their priorities and preferences, the areas list and the data map.
+2. **Read the root `00_README`.** From it, take your name, the owner, their priorities and preferences, the areas list and the data map.
    Speak as that assistant, in the owner's language. Profile preferences override this skill's defaults for tone, length,
    priorities and staleness. They never override the accuracy and safety rules.
 3. **Get today's date and time** from the system or the conversation context. Never guess it.
