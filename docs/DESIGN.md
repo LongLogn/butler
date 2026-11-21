@@ -28,21 +28,23 @@ dẫn cách dùng các tool đó. Khi cần một MCP tự viết (vd: tính GPA
 
 ```
 Butler/                          ← gốc kho, luôn tên "Butler" dù trợ lý được đặt tên gì
-├── 00_README                    ← LỚP 0: danh tính, chủ nhân, bảng các mảng, bản đồ dữ liệu
+├── butler-readme                ← LỚP 0: danh tính, chủ nhân, danh sách các mảng, bản đồ dữ liệu
 ├── Học tập/
-│   ├── 00_README                ← LỚP 1: tổng quan mảng + 1 dòng cho mỗi mục con
+│   ├── butler-readme            ← LỚP 1: tổng quan mảng + 1 dòng cho mỗi mục con
 │   └── Kỳ 1 năm 3/
-│       ├── 00_README            ← LỚP 2
-│       └── Cloud/00_README      ← LỚP 3: chi tiết, nhật ký
+│       ├── butler-readme        ← LỚP 2
+│       └── Cloud/butler-readme  ← LỚP 3: chi tiết, nhật ký
 ├── Công việc/
-│   ├── 00_README
-│   └── Buổi dạy (Sheet)         ← dữ liệu dạng bảng
+│   ├── butler-readme
+│   └── butler-buoi-day (Sheet)  ← dữ liệu dạng bảng
 └── Sức khỏe/
-    ├── 00_README
-    └── Nhật ký sức khỏe (Sheet)
+    ├── butler-readme
+    └── butler-giac-ngu (Sheet)
 ```
 
-- Mỗi thư mục là một **nút**. Mỗi nút có đúng một `00_README` (Google Doc).
+- Mỗi thư mục là một **nút**. Mỗi nút có đúng một `butler-readme` (Google Doc).
+- **Mọi file Butler tạo ra đều có tiền tố `butler-`**: ghi chú là `butler-readme`, Sheet là `butler-<chủ đề>`
+  (chữ thường, không dấu, nối bằng gạch ngang, vd `butler-buoi-day`). Thư mục thì giữ tên dễ đọc theo ý chủ.
 - Phân vai connector: **Drive** tìm kho, tạo thư mục và file. **Docs** đọc và sửa nội dung ghi chú.
   `update_file` của Drive chỉ đổi tên, thư mục, gắn sao, không sửa được nội dung.
 - Mẫu ghi chú được thiết kế để sửa bằng Docs an toàn:
@@ -56,7 +58,7 @@ Butler/                          ← gốc kho, luôn tên "Butler" dù trợ l�
 
 1. Đầu phiên chỉ đọc **lớp 0**. Đủ để biết tên mình, chủ là ai, có những mảng nào,
    mỗi mảng đang thế nào (1 dòng), mốc gần nhất.
-2. Câu hỏi chạm mảng nào thì mới mở `00_README` của mảng đó, rồi mới xuống tiếp nếu cần.
+2. Câu hỏi chạm mảng nào thì mới mở `butler-readme` của mảng đó, rồi mới xuống tiếp nếu cần.
 3. Sheet chỉ đọc khi cần con số.
 
 Nguyên lý: **mỗi lớp trên giữ bản tóm tắt 1 dòng của lớp dưới**, nên phần lớn câu hỏi tổng quan
@@ -74,7 +76,7 @@ trả lời được mà không cần đào sâu.
 ## Lưu trữ thay thế
 
 Không có connector Google Drive nhưng có quyền đọc ghi file (Claude Code) → kho có thể là
-một thư mục local với cấu trúc giống hệt, `00_README.md` thay cho Google Doc,
+một thư mục local với cấu trúc giống hệt, `butler-readme.md` thay cho Google Doc,
 `.csv` thay cho Sheet. Lớp 0 ghi rõ `storage:` để phiên sau biết kho ở đâu.
 
 ## Phát hành
