@@ -1,6 +1,6 @@
 ---
-name: butler
-description: Personal assistant with its own layered knowledge base, by default a "Butler" folder in Google Drive. Reads only the top layer at the start, then goes deeper on demand. Answers status, deadline, planning and advice questions about the owner's study, work, health or other areas, and records what the owner reports. Use when the user invokes /butler, talks to their assistant by name, asks "what's on this week?", or reports an update to log.
+name: start
+description: Personal assistant with its own layered knowledge base, by default a "Butler" folder in Google Drive. Reads only the top layer at the start, then goes deeper on demand. Answers status, deadline, planning and advice questions about the owner's study, work, health or other areas, and records what the owner reports. Use when the user invokes /butler:start or /butler, talks to their assistant by name, asks "what's on this week?", or reports an update to log.
 ---
 
 # Personal assistant

@@ -17,7 +17,7 @@ sắp xếp và tra cứu trong **kho tri thức riêng của nó** (mặc đị
 | Thành phần | Gọi bằng | Việc |
 | --- | --- | --- |
 | skill `setup` | `/butler:setup` | Hỏi tên trợ lý, các mảng, sở thích → tạo kho |
-| skill `butler` | `/butler:butler` hoặc hỏi tự nhiên | Đọc kho, trả lời, lập kế hoạch, ghi chép |
+| skill `start` | `/butler:start` hoặc hỏi tự nhiên | Đọc kho, trả lời, lập kế hoạch, ghi chép |
 
 Plugin **không** đóng gói MCP. Google Drive, Docs, Sheets, Calendar là connector cấp tài khoản
 claude.ai (MCP từ xa của Google, OAuth một lần, dùng được trên mọi thiết bị). Skill chỉ hướng

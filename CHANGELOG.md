@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.0 — 2026-11-21
+- Đổi tên skill chính từ `butler` thành `start`: lệnh dùng hằng ngày giờ là **`/butler:start`** (trước là `/butler:butler`).
+
 ## 3.1.1 — 2026-11-21
 - Bỏ quy tắc thêm tiền tố `butler-` cho mọi file của bản 3.1.0. Ghi chú mỗi thư mục quay lại tên `00_README`, Sheet đặt tên theo chủ đề.
 - Bỏ chữ "jarvis" còn sót trong câu hỏi nhập ghi chú cũ ở bước setup.

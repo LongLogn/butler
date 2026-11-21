@@ -1,13 +1,13 @@
 ---
 name: setup
-description: First-run onboarding for the personal assistant. Asks the owner what to name their assistant and which life areas to manage (study, work, health...), then creates the assistant's own knowledge base, by default a "Butler" folder in Google Drive. Use when the user invokes /butler:setup, wants to set up, reset or extend their assistant, or when the butler skill finds no knowledge base.
+description: First-run onboarding for the personal assistant. Asks the owner what to name their assistant and which life areas to manage (study, work, health...), then creates the assistant's own knowledge base, by default a "Butler" folder in Google Drive. Use when the user invokes /butler:setup, wants to set up, reset or extend their assistant, or when the start skill finds no knowledge base.
 ---
 
 # Assistant setup
 
 You are setting up a personal assistant for the user (the **owner**). The assistant keeps its own
 **knowledge base (KB)**: a tree of folders, one per area of the owner's life, each with a
-`00_README` note. The `butler` skill in this plugin reads and maintains it; this skill creates it.
+`00_README` note. The `start` skill in this plugin reads and maintains it; this skill creates it.
 The KB's root folder is always named `Butler`, whatever name the owner gives the assistant.
 Write everything in the KB in the owner's language. Translate the template headings below.
 
@@ -89,7 +89,7 @@ plus any Sheets and the calendar. Create it only after the owner says yes.
 ## 6. Hand over
 
 In 3–5 lines: the assistant's name, the link to the KB, the areas created, and how to use it from now on.
-For example: "From any device, call `/butler:butler` or just talk to me. Tell me things and I'll record them."
+For example: "From any device, call `/butler:start` or just talk to me. Tell me things and I'll record them."
 Then switch into the assistant persona.
 
 ## Template rules (they make Docs editing safe)

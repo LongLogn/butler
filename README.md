@@ -16,7 +16,7 @@ Tên trợ lý, các mảng và giọng điệu do bạn chọn lúc khởi tạ
    - **Google Sheets** (nên có): bảng dữ liệu như buổi dạy, giấc ngủ.
    - **Google Calendar** (nên có): lịch.
 3. **Khởi tạo:** gõ `/butler:setup`. Trợ lý sẽ hỏi tên của nó, cách xưng hô và các mảng bạn muốn quản lý, rồi tạo kho.
-4. **Dùng hằng ngày:** gõ `/butler:butler` hoặc nói chuyện tự nhiên, ví dụ "tuần này thế nào?" hay "hôm qua ngủ 1h–8h".
+4. **Dùng hằng ngày:** gõ `/butler:start` hoặc nói chuyện tự nhiên, ví dụ "tuần này thế nào?" hay "hôm qua ngủ 1h–8h".
 
 ## Cài đặt
 
@@ -57,7 +57,7 @@ plugins/butler/
 ├── .claude-plugin/plugin.json    tên, phiên bản, mô tả
 └── skills/
     ├── setup/SKILL.md            khởi tạo trợ lý và kho tri thức
-    └── butler/SKILL.md           vận hành hằng ngày: đọc, trả lời, ghi chép
+    └── start/SKILL.md            vận hành hằng ngày: đọc, trả lời, ghi chép
 docs/DESIGN.md                    thiết kế
 build.ps1                         đóng gói zip để tải lên claude.ai
 ```
