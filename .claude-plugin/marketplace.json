@@ -1,13 +1,13 @@
 {
-  "name": "jarvis-plugin",
+  "name": "butler",
   "owner": {
     "name": "LongLogn"
   },
   "description": "Personal assistant plugins.",
   "plugins": [
     {
-      "name": "jarvis",
-      "source": "./plugins/jarvis",
+      "name": "butler",
+      "source": "./plugins/butler",
       "description": "Personal assistant with its own layered knowledge base in Google Drive."
     }
   ]

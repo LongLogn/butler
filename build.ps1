@@ -1,10 +1,10 @@
-# Packages plugins/jarvis into dist/jarvis.zip for upload to claude.ai.
+# Packages plugins/butler into dist/butler.zip for upload to claude.ai.
 # The zip root contains .claude-plugin/ and skills/ directly; entry names use "/" separators.
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
-$src  = (Resolve-Path (Join-Path $root 'plugins\jarvis')).Path
+$src  = (Resolve-Path (Join-Path $root 'plugins\butler')).Path
 $dist = Join-Path $root 'dist'
-$zip  = Join-Path $dist 'jarvis.zip'
+$zip  = Join-Path $dist 'butler.zip'
 New-Item -ItemType Directory -Force $dist | Out-Null
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Add-Type -AssemblyName System.IO.Compression

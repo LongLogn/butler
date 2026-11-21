@@ -1,4 +1,4 @@
-# Thiết kế Jarvis v2
+# Thiết kế Butler
 
 ## Ý tưởng
 
@@ -16,8 +16,8 @@ sắp xếp và tra cứu trong **kho tri thức riêng của nó** (mặc đị
 
 | Thành phần | Gọi bằng | Việc |
 | --- | --- | --- |
-| skill `setup` | `/jarvis:setup` | Hỏi tên trợ lý, các mảng, sở thích → tạo kho |
-| skill `jarvis` | `/jarvis:jarvis` hoặc hỏi tự nhiên | Đọc kho, trả lời, lập kế hoạch, ghi chép |
+| skill `setup` | `/butler:setup` | Hỏi tên trợ lý, các mảng, sở thích → tạo kho |
+| skill `butler` | `/butler:butler` hoặc hỏi tự nhiên | Đọc kho, trả lời, lập kế hoạch, ghi chép |
 
 Plugin **không** đóng gói MCP. Google Drive, Docs, Sheets, Calendar là connector cấp tài khoản
 claude.ai (MCP từ xa của Google, OAuth một lần, dùng được trên mọi thiết bị). Skill chỉ hướng
@@ -27,7 +27,7 @@ dẫn cách dùng các tool đó. Khi cần một MCP tự viết (vd: tính GPA
 ## Kho tri thức phân cấp
 
 ```
-<Tên trợ lý>/                    ← gốc kho, vd "Jarvis"
+Butler/                          ← gốc kho, luôn tên "Butler" dù trợ lý được đặt tên gì
 ├── 00_README                    ← LỚP 0: danh tính, chủ nhân, bảng các mảng, bản đồ dữ liệu
 ├── Học tập/
 │   ├── 00_README                ← LỚP 1: tổng quan mảng + 1 dòng cho mỗi mục con
@@ -80,6 +80,6 @@ một thư mục local với cấu trúc giống hệt, `00_README.md` thay cho 
 ## Phát hành
 
 ```
-sửa trong repo → commit → build.ps1 → tải dist/jarvis.zip lên claude.ai → có trên mọi thiết bị
+sửa trong repo → commit → build.ps1 → tải dist/butler.zip lên claude.ai → có trên mọi thiết bị
 ```
 Claude Code còn cài được thẳng từ repo qua marketplace (xem README).

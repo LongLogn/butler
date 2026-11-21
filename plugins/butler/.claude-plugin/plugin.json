@@ -1,0 +1,8 @@
+{
+  "name": "butler",
+  "version": "3.0.0",
+  "description": "Personal assistant you just talk to. It keeps its own layered knowledge base in Google Drive (study, work, health...), reads the top layer each session, goes deeper on demand, and records what you tell it. Start with /butler:setup.",
+  "author": {
+    "name": "LongLogn"
+  }
+}

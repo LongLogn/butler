@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.0 — 2026-11-21
+- Đổi tên plugin từ `jarvis` thành **`butler`**. Lệnh mới là `/butler:setup` và `/butler:butler`. Repo đổi thành `LongLogn/butler`.
+- Thư mục gốc của kho trên Drive **luôn tên là `Butler`**, không theo tên trợ lý nữa. Lúc setup vẫn hỏi tên và phong cách.
+- Dòng đánh dấu gốc kho đổi từ `assistant-root: v2` thành `butler-root: v1`. Tên mặc định của trợ lý là Butler.
+
 ## 2.1.0 — 2026-11-21
 - Thêm connector **Google Docs** (bắt buộc): mọi ghi chú `00_README` là Google Doc, đọc bằng `read_doc` và sửa bằng `update_doc`.
   Drive chỉ dùng để tìm, tạo file và thư mục, vì `update_file` của Drive không sửa được nội dung.

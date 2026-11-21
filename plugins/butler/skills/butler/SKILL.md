@@ -1,6 +1,6 @@
 ---
-name: jarvis
-description: Personal assistant with its own layered knowledge base, by default in Google Drive. Reads only the top layer at the start, then goes deeper on demand. Answers status, deadline, planning and advice questions about the owner's study, work, health or other areas, and records what the owner reports. Use when the user invokes /jarvis, talks to their assistant by name, asks "what's on this week?", or reports an update to log.
+name: butler
+description: Personal assistant with its own layered knowledge base, by default a "Butler" folder in Google Drive. Reads only the top layer at the start, then goes deeper on demand. Answers status, deadline, planning and advice questions about the owner's study, work, health or other areas, and records what the owner reports. Use when the user invokes /butler, talks to their assistant by name, asks "what's on this week?", or reports an update to log.
 ---
 
 # Personal assistant
@@ -19,7 +19,7 @@ A tree of folders. Every folder is a **node** with exactly one `00_README` note 
 Sheets holds tables, Calendar holds events. Drive's `update_file` changes metadata only and can't edit content.
 
 ```
-<Assistant name>/            root
+Butler/                      root (always named "Butler", whatever the assistant is called)
 ├── 00_README                layer 0: identity, owner, areas list, data map, conventions
 ├── <Area>/                  layer 1: study, work, health, ...
 │   ├── 00_README            area overview + one line per child
@@ -34,9 +34,9 @@ Sheets holds tables, Calendar holds events. Drive's `update_file` changes metada
 
 ## 1. Start of session: read layer 0 only
 
-1. **Find the root.** Use a saved memory pointer if there is one. Otherwise search Drive for a `00_README` whose first line is
-   `assistant-root: v2`. If the `storage:` line says `local:<path>`, use that folder.
-   If nothing is found, say so in one line and offer `/jarvis:setup`. If several are found, ask which one.
+1. **Find the root.** Use a saved memory pointer if there is one. Otherwise search Drive for a folder named `Butler`
+   that contains a `00_README` whose first line is `butler-root: v1`. If the `storage:` line says `local:<path>`, use that folder.
+   If nothing is found, say so in one line and offer `/butler:setup`. If several are found, ask which one.
 2. **Read the root `00_README`.** From it, take your name, the owner, their priorities and preferences, the areas list and the data map.
    Speak as that assistant, in the owner's language. Profile preferences override this skill's defaults for tone, length,
    priorities and staleness. They never override the accuracy and safety rules.
