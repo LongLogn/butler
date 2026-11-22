@@ -5,8 +5,8 @@ description: Onboarding for the personal assistant. Asks what to name it, how it
 
 # Assistant setup
 
-This is the assistant's hiring day. You set up a personal assistant for the user (the **owner**) and then hand over to
-the `start` skill, which runs it every day. This skill creates **KB format v2** (plugin butler 4.0.0).
+This is the assistant's hiring day. You build the assistant's knowledge base for the user (the **owner**), or migrate
+an old one into the current format, then hand over to the `start` skill, which runs the assistant every day. This skill creates **KB format v2** (plugin butler 4.1.0).
 
 It creates two things:
 - a `Butler` folder tree in Google Drive, one folder per area of the owner's life, each with a `00_README` Google Doc;
@@ -37,7 +37,7 @@ Ignore hits whose parent is a `_backup` folder.
 
 - **Format v2:** show the assistant's name and areas, then ask whether to add areas or start fresh.
   Never delete or overwrite a KB without an explicit yes.
-- **Format v1:** offer the upgrade (§7).
+- **An older format:** offer to migrate it (§7).
 - **A `Butler` folder without a root doc** (an earlier setup failed): offer to continue inside it.
 - **None:** continue.
 
@@ -101,12 +101,8 @@ Create it only after the owner says yes.
      - then the owner's rules, style, who they are and what wins in a conflict, and their routine habits (`Source: owner`).
    - **Important:** deadlines, commitments and goals, most important first.
    - **Recent:** leave it empty.
-6. **Import notes,** if asked. Read sources with `read_file_content`.
-   - Put content into the matching node in the owner's wording. Split deeper topics into child folders.
-   - Data with rows and numbers goes into a Sheet in that node.
-   - Every README lists its children and files with links.
-   - Anything with a date or a stake goes into Important.
-   - Leave the source files untouched.
+6. **Import notes,** if asked: follow the migration pipeline (§7, steps 2–6) with the notes as the source.
+   Leave the source files untouched.
 7. **Calendar,** if connected.
    - Use a calendar named after the assistant if one exists. Otherwise use the primary calendar, with `[<Name>]` before event titles.
    - Write the choice in the root README.
@@ -116,23 +112,31 @@ Create it only after the owner says yes.
 
 ## 6. Hand over
 
-In 3–5 lines, give the assistant's name, the KB link, the areas, and how to use it.
-For example: "From any device, call `/butler:start` or just talk to me. Tell me what happens and what you want, and I'll remember."
-Then switch into the assistant persona.
+Setup only builds and hands over; it doesn't start working as the assistant. Everything the assistant needs is now in
+the KB: who it is and how to talk lives in the Protocol tab, which `start` loads first.
+
+In a few lines, report:
+- the KB link;
+- what was created or migrated, with counts (areas, Protocol rows, Important rows);
+- anything left out and why;
+- where the backup is, if there is one.
+
+Then end with: "Done. Open a new session and run `/butler:start` to begin. It works from any device."
+Don't switch into the persona, and don't load the memory.
 
 ## Root `00_README` template
 
 ```
 butler-root: v2
 
-written-by: butler 4.0.0
+written-by: butler 4.1.0
 
 memory: <Sheet ID> · tabs: <Recent title>=0 · <Important title>=1 · <Protocol title>=2
 
 # <Name>: knowledge base
 
 The working memory (recent events, important matters, the owner's instructions) is in the memory Sheet.
-Each folder has a 00_README explaining what it holds.
+Each folder has a 00_README explaining what it holds and how it works.
 
 ## Areas
 - <Area> · <what it covers> · <link>
@@ -143,7 +147,7 @@ Each folder has a 00_README explaining what it holds.
 - Outside the KB (links only): <repos, owner's documents>
 
 ## System log
-<YYYY-MM-DD> · KB created (format v2, butler 4.0.0)
+<YYYY-MM-DD> · KB created (format v2, butler 4.1.0)
 ```
 
 Keep a blank line between header lines; in markdown, adjacent lines merge into one paragraph. Use no tables in Docs.
@@ -164,24 +168,68 @@ Status: <active | paused | done> · updated <YYYY-MM-DD>
 ## Contents
 - <child folder or file> · <what it holds> · <link>
 
+## How it works
+- <what goes where> · why: <reason>
+
 ## History
 <YYYY-MM-DD> · created
 ```
 
+`## How it works` is the folder's operating manual. Include it only when the folder has a rule worth stating.
 `## History` must stay the last section, because `start` appends to the end of the doc.
 
-## 7. Upgrade an older KB
+## 7. Migrate old data into the current format
 
-Ask before upgrading, and say in 2–3 lines what changes.
-- **Back up first:** copy every doc you will change into `Butler/_backup/<YYYY-MM-DD> vN/`,
-  renaming each copy `<name> (backup vN)` so it is never taken for the root.
-- **Order:** set the `butler-root:` and `written-by:` lines last, then add a line to the system log.
-  If the upgrade is interrupted, the KB still reads as the old version, so run it again. Each step must be safe to re-run.
+Use this for an older Butler KB (any earlier format) and for notes kept elsewhere (notes files, docs, sheets).
+Migrate **by meaning, not by script**. The current format is fully described by the templates and the memory Sheet
+above, so read what the old data *means* and place it where the current design puts that kind of information.
 
-**v1 → v2:**
-1. If the root has no `memory:` line, create the memory Sheet (§5 step 2). Then add the `memory:` header line.
-2. **Protocol:** seed from the root's Identity and Owner sections, with name, address and time zone as pinned rows. **Important:** seed from each area's `next:` milestone
-   and anything urgent. Ask the owner to glance at the order.
-3. **Root README:** reshape it to the v2 template. Keep the Areas list and add each area's link.
-4. **Node READMEs:** rename `## Log` to `## History` and leave the entries as they are.
-   Missing sections are added the first time `start` edits the node.
+1. **Explain and ask.** In 2–3 lines, say what will change and that a backup comes first. Wait for a yes.
+2. **Inventory.** Read the whole source once, every README, note and sheet. This is the one time reading everything
+   is right. For each piece, decide what kind of information it is:
+
+   | Kind of information | Goes to |
+   | --- | --- |
+   | assistant name, how to address the owner, time zone | Protocol, pinned rows |
+   | the owner's instructions, style, personality, priorities, habits | Protocol, most binding first |
+   | deadlines, commitments, goals, habits being changed, open risks | Important, ranked |
+   | events from about the last 7 days | Recent, newest first |
+   | fixed weekly routines | Calendar recurring events (offer; ask first) |
+   | rows of measurements (sessions, sleep, money) | a data Sheet in that node |
+   | current state and context of a topic | that node's README `## Now` and `## Key info` |
+   | dated past events | that node's README `## History` |
+   | how a folder is organized, and why | that node's README `## How it works` |
+
+3. **Plan and ask.** Show the new tree, how many items go to each destination, and anything you couldn't place.
+   Ask before going on.
+4. **Back up.**
+   - For a Butler KB, copy every doc you will change into `Butler/_backup/<YYYY-MM-DD> vN/`, renaming each copy
+     `<name> (backup vN)` so it is never taken for the root.
+   - Other sources are only read, never changed.
+5. **Migrate,** in this order:
+   1. the memory Sheet, created if missing (§5 step 2), then seeded;
+   2. node READMEs, rewritten to the current template from the deepest folders up, with links in Contents;
+   3. the root README last, with its `butler-root:` and `written-by:` lines set last of all.
+
+   If the migration is interrupted, the KB still reads as the old version, so run it again.
+   Every step must be safe to re-run: check what already exists before creating it.
+6. **Verify:**
+   - every old folder has a README in the current template;
+   - Protocol has its pinned rows;
+   - every future-dated item from the source is in Important or on the Calendar;
+   - the counts match the plan;
+   - the root's first paragraph is `butler-root: v2`.
+
+   Then add a line to the root's system log, and report (§6).
+
+### What changed between formats
+
+Use this to recognize old layouts. Add a line for each new format.
+- **v1 → v2:**
+  - the memory Sheet is new;
+  - the root's Identity and Owner sections move to Protocol;
+  - each area's `next:` milestone and Milestones move to Important;
+  - `## Log` becomes `## History`;
+  - READMEs gain Contents links and `## How it works`;
+  - the root README becomes a map of areas.
+- **Notes from before Butler** (e.g. a `jarvis.md` in each local folder): treat each file as one node. Its folder path gives its place in the tree.

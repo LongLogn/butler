@@ -1,6 +1,6 @@
 {
   "name": "butler",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Personal assistant you just talk to. It keeps its memory in Google Drive: a folder tree per area of your life (study, work, health...) and a memory Sheet of recent events, important matters and your standing instructions. Each session it loads the top of that memory, digs into one branch when needed, and records what you tell it. Start with /butler:setup.",
   "author": {
     "name": "LongLogn"

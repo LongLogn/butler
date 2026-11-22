@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.1.0 — 2026-11-22
+- **README mỗi thư mục là "người quản lý" của thư mục đó:** thêm mục `## How it works` ghi cái gì để ở đâu và vì sao
+  (ví dụ buổi dạy ghi vào Sheet vì cần cộng tiền theo tháng). Khi chủ đồng ý một cách tổ chức mới, Butler tự ghi vào đây,
+  nên mọi phiên sau làm giống nhau.
+- **Setup chỉ xây và bàn giao:** cuối cùng báo kết quả (link, số lượng, phần bỏ sót, bản sao lưu) rồi bảo mở phiên mới
+  và chạy `/butler:start`. Không nhập vai, không nạp trí nhớ.
+- **Chuyển đổi dữ liệu cũ thành một quy trình chung, theo ý nghĩa thay vì theo kịch bản:**
+  giải thích → kiểm kê → kế hoạch → sao lưu → chuyển → kiểm tra.
+  Dùng cho kho Butler đời cũ lẫn ghi chú ngoài (như các file `jarvis.md`). Có bảng "What changed between formats" để nhận ra bố cục cũ.
+- Định dạng kho vẫn là v2, không cần nâng cấp.
+
 ## 4.0.0 — 2026-11-22
 Cơ chế nạp trí nhớ mới, lấy ý tưởng từ cache trong hệ điều hành. Kho định dạng **v2**.
 - **Sheet bộ nhớ** có 3 tab, đầu phiên chỉ đọc 10 dòng đầu mỗi tab dù tab dài đến đâu:

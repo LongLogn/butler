@@ -43,7 +43,14 @@ Butler/
 └── Sức khỏe/00_README
 ```
 
-- Mỗi thư mục có đúng một `00_README` (Google Doc), gồm: "What this is", `## Now`, `## Contents`, và `## History` ngắn ở cuối.
+- Mỗi thư mục có đúng một `00_README` (Google Doc), là **người quản lý** của thư mục, gồm:
+  - "What this is";
+  - `## Now`;
+  - `## Contents`;
+  - `## How it works`: cách vận hành và lý do, chỉ có khi cần;
+  - `## History` ngắn ở cuối.
+
+  Nhờ vậy truy xuất từ trên xuống, bàn giao giữa các phiên và hiểu ngữ cảnh đều nhất quán.
 - README lưu **link** của con. Drive làm việc theo ID chứ không theo đường dẫn, nên có link thì đi thẳng xuống bằng một lệnh, giống con trỏ trong cây.
 - **Docs** giữ hiểu biết, **Sheets** giữ dòng và số liệu, **Calendar** giữ mọi thứ có giờ.
 
@@ -90,7 +97,12 @@ Chi phí đầu phiên gần như không đổi dù kho lớn đến đâu.
 ## Phiên bản kho và nâng cấp
 
 - Đầu `00_README` gốc có `butler-root: v2` (định dạng kho) và `written-by: butler X.Y.Z` (bản plugin ghi lần cuối).
-- `start` gặp kho cũ thì chỉ đọc, và đề nghị chạy `/butler:setup` để nâng cấp. Setup sao lưu vào `Butler/_backup/` trước khi nâng cấp.
+- `start` gặp kho cũ thì chỉ đọc, và đề nghị chạy `/butler:setup` để chuyển đổi.
+- **Setup chuyển đổi theo ý nghĩa, không theo kịch bản.** Quy trình gồm: giải thích → kiểm kê toàn bộ dữ liệu cũ →
+  kế hoạch (hỏi chủ) → sao lưu vào `Butler/_backup/` → chuyển (Sheet trước, README từ sâu lên, gốc sau cùng) → kiểm tra.
+  Quy trình này dùng chung cho kho Butler đời cũ lẫn ghi chú ngoài.
+  Mỗi định dạng mới chỉ cần thêm một dòng vào mục "What changed between formats".
+- Setup chỉ xây và bàn giao. Xong thì bảo chủ mở phiên mới chạy `/butler:start`.
 - Kho mới hơn plugin: chỉ đọc, và nhắc chủ cập nhật plugin.
 - `build.ps1` dừng lại nếu số phiên bản `butler X.Y.Z` trong skill khác với `plugin.json`.
 
