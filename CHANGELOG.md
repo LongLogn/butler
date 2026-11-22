@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.2.0 — 2026-11-22
+Chuyển đổi dữ liệu cũ **buộc phải theo cấu trúc mới**, tránh bị neo theo bố cục cũ:
+- Dữ liệu cũ chỉ là nguồn thông tin, không phải khuôn. Không mang sang mục cũ, bố cục cũ hay thói quen cũ.
+- Bước kế hoạch cho chủ xem trước một thư mục mẫu, đặt README cũ cạnh README mới.
+- README mới được viết lại từ đầu theo mẫu rồi thay toàn bộ nội dung file cũ, không sửa dần bản cũ.
+- Thêm bước kiểm tra "đúng kiểu":
+  - chỉ có các mục trong mẫu, không còn dấu vết cũ;
+  - deadline nằm trong tab Quan trọng, số liệu nằm trong Sheet;
+  - `## Now` và `## History` gọn;
+  - tab Giao thức không bị bỏ trống.
+
 ## 4.1.0 — 2026-11-22
 - **README mỗi thư mục là "người quản lý" của thư mục đó:** thêm mục `## How it works` ghi cái gì để ở đâu và vì sao
   (ví dụ buổi dạy ghi vào Sheet vì cần cộng tiền theo tháng). Khi chủ đồng ý một cách tổ chức mới, Butler tự ghi vào đây,
