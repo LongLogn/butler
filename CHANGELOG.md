@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.0.0 — 2026-11-22
+Cơ chế nạp trí nhớ mới, lấy ý tưởng từ cache trong hệ điều hành. Kho định dạng **v2**.
+- **Sheet bộ nhớ** có 3 tab, đầu phiên chỉ đọc 10 dòng đầu mỗi tab dù tab dài đến đâu:
+  - **Gần đây:** xếp theo thời gian, mới nhất ở đầu.
+  - **Quan trọng:** xếp theo mức quan trọng; việc lên hạng, xuống dần theo tiến độ, rơi hẳn hoặc rời tab khi xong.
+  - **Giao thức:** tên trợ lý, xưng hô, múi giờ ghim cố định ở đầu; sau đó là lời dặn, phong cách, tính cách của chủ.
+  - Một sự kiện dùng chung một mã ở mọi tab.
+- **Đầu phiên** còn đọc cột Hạn của các việc dưới hạng 10 (việc sắp tới hạn được kéo lên) và lịch hôm nay, ngày mai.
+- **Giữa phiên** chỉ đào sâu nhánh đang bàn. README lưu link tới thư mục và file con để đi thẳng.
+- **Làm thông minh:** chọn công cụ hợp nhất (Sheet cho lịch dạy, Calendar cho nhắc nhở), đề xuất rồi xin phép.
+- README mỗi thư mục giữ trạng thái hiện tại, danh sách con và mục `## History` ngắn ở cuối.
+- **Google Sheets thành bắt buộc.**
+- Nâng cấp kho v1 chuyển sang `/butler:setup`, có sao lưu.
+- Sửa theo công cụ Google thật: đọc 3 tab bằng một lệnh, thêm dòng Gần đây bằng một lệnh, đọc ghi chú dạng chữ thường, tìm trùng lịch bằng `list_events`.
+
 ## 3.3.0 — 2026-11-21
 Bản sửa sau khi hai agent đánh giá: một agent xem độ bền, một agent xem độ đơn giản.
 - **Phiên bản kho:** đầu `00_README` gốc có `butler-root: v1` và `written-by: butler X.Y.Z`. `/butler:start` so sánh hai số này:

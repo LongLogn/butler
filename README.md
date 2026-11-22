@@ -1,8 +1,9 @@
 # Butler: trợ lý cá nhân chỉ cần nói chuyện
 
 Bạn kể, hỏi, giao việc. Trợ lý tự ghi chép và sắp xếp vào **kho tri thức riêng của nó**: thư mục `Butler` trên Google Drive.
-Kho chia theo từng mảng đời sống của bạn: học tập, công việc, sức khỏe, dự án… Mỗi phiên mới, trợ lý chỉ đọc
-lớp trên cùng để biết nó là ai, bạn là ai và từng mảng đang thế nào. Khi bạn hỏi tới mảng nào, nó mới đọc sâu vào mảng đó.
+Kho chia theo từng mảng đời sống của bạn (học tập, công việc, sức khỏe, dự án…), mỗi thư mục có một README.
+Kho cũng có một **Sheet bộ nhớ** với 3 danh sách: chuyện gần đây, việc quan trọng, và những gì bạn dặn.
+Mỗi phiên mới, trợ lý chỉ đọc 10 mục đầu của mỗi danh sách cùng lịch hôm nay và ngày mai. Khi bạn bàn sâu mảng nào, nó mới đọc sâu vào mảng đó.
 Dùng chung được trên máy tính, web và điện thoại, vì trí nhớ nằm trên Drive chứ không nằm trong phiên chat.
 
 Tên trợ lý, các mảng và giọng điệu do bạn chọn lúc khởi tạo. Thư mục kho thì luôn tên là `Butler`. Thiết kế chi tiết xem ở [docs/DESIGN.md](docs/DESIGN.md).
@@ -13,8 +14,8 @@ Tên trợ lý, các mảng và giọng điệu do bạn chọn lúc khởi tạ
 2. **Kết nối connector** trên claude.ai:
    - **Google Drive** (bắt buộc): tìm kho, tạo thư mục và file.
    - **Google Docs** (bắt buộc): đọc và **sửa** nội dung ghi chú. Drive chỉ đổi được tên và thư mục của file, không sửa được nội dung.
-   - **Google Sheets** (nên có): bảng dữ liệu như buổi dạy, giấc ngủ.
-   - **Google Calendar** (nên có): lịch.
+   - **Google Sheets** (bắt buộc): Sheet bộ nhớ và các bảng dữ liệu như buổi dạy, giấc ngủ.
+   - **Google Calendar** (nên có): lịch và nhắc nhở.
 3. **Khởi tạo:** gõ `/butler:setup`. Trợ lý sẽ hỏi tên của nó, cách xưng hô và các mảng bạn muốn quản lý, rồi tạo kho.
 4. **Dùng hằng ngày:** gõ `/butler:start` hoặc nói chuyện tự nhiên, ví dụ "tuần này thế nào?" hay "hôm qua ngủ 1h–8h".
 
@@ -53,7 +54,7 @@ If a user gives you this repository's link and asks you to install it:
   This installs it for Claude Code on this computer only. It does not reach claude.ai or the phone app.
 - **claude.ai:** you can't install plugins yourself. If you have a shell, clone the repo and run `build.ps1` (or zip the contents of
   `plugins/butler` so `.claude-plugin/` sits at the zip root). Then give the user the zip and tell them to upload it.
-- After installing, check that the Google Drive and Google Docs connectors are connected (Sheets and Calendar are
+- After installing, check that the Google Drive, Google Docs and Google Sheets connectors are connected (Calendar is
   recommended), then run the `setup` skill (`/butler:setup`).
 
 ## Cấu trúc repo
